@@ -5,15 +5,18 @@ export const AuthContext = createContext();
 
 export const AuthContextPovider = ({children}) => {
     const [currentUser, setCurrentUser] = useState(JSON.parse(localStorage.getItem("user") || null));
+    const [isLogin, setIsLogin] = useState(false);
 
     const login = async(inputs) => {
         const res = await axios.post("/api/auth/login", inputs);
         setCurrentUser(res.data);
+        setIsLogin(true);
     }
 
     const logout = async() => {
         await axios.post("/api/auth/logout");
         setCurrentUser(null);
+        setIsLogin(false);
     }
 
     const refreshAccessToken = (accessToken) => {
@@ -26,7 +29,7 @@ export const AuthContextPovider = ({children}) => {
     }, [currentUser]);
 
     return (
-        <AuthContext.Provider value={{currentUser, login, logout, refreshAccessToken}}>
+        <AuthContext.Provider value={{isLogin,currentUser, login, logout, refreshAccessToken}}>
             {children}
         </AuthContext.Provider>
     )

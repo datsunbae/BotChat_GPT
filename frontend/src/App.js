@@ -1,42 +1,30 @@
 import "./App.css";
-import { createBrowserRouter, Outlet, RouterProvider } from "react-router-dom";
-import { ChakraProvider, Container } from '@chakra-ui/react'
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { ChakraProvider, Container } from "@chakra-ui/react";
 
 import HomePage from "./pages/Home";
 import ChatPage from "./pages/Chat";
-
-const Root = () => {
-  return (
-    <>
-      <Container maxW='xl' centerContent>
-        <Outlet />
-      </Container>
-    </>
-  );
-};
-
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Root />,
-    children: [
-      {
-        path: "/",
-        element: <HomePage />,
-      },
-      {
-        path: "/chats",
-        element: <ChatPage />,
-      },
-    ],
-  },
-]);
+import Authencation from "./middlewares/Authencation";
 
 function App() {
   return (
     <div className="app">
       <ChakraProvider>
-        <RouterProvider router={router} />
+        <Container maxW="xl" centerContent>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route
+                path="/chats"
+                element={
+                  <Authencation redirectTo="/">
+                    <ChatPage />
+                  </Authencation>
+                }
+              ></Route>
+            </Routes>
+          </BrowserRouter>
+        </Container>
       </ChakraProvider>
     </div>
   );
