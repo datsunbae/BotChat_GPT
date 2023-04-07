@@ -10,9 +10,11 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import React from "react";
-
+import React, { useContext } from "react";
+import ProfileModel from "./ProfileModel";
+import { AuthContext } from "../context/AuthContext";
 const Header = () => {
+  const { currentUser } = useContext(AuthContext);
   return (
     <Flex
       justifyContent="space-between"
@@ -36,10 +38,12 @@ const Header = () => {
       </Flex>
       <Menu>
         <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-          <Avatar size="sm" name="Dan Abrahmov" src="https://bit.ly/dan-abramov" />
+          <Avatar size="sm" name="Dan Abrahmov" src={currentUser.avatar} />
         </MenuButton>
         <MenuList>
-          <MenuItem>My Profile</MenuItem>
+          <ProfileModel currentUser={currentUser}>
+            <MenuItem>My Profile</MenuItem>
+          </ProfileModel>
           <MenuItem>Logout</MenuItem>
         </MenuList>
       </Menu>
