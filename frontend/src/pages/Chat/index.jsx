@@ -11,7 +11,7 @@ const handleClick = async () => {
 
 const ChatPage = () => {
   return (
-    <button onClick={handleClick}>ChatPage</button>
+    <button onClick={handleClick}>ChatPageTranCaoDai</button>
   )
 }
 
