@@ -14,7 +14,10 @@ import React, { useContext } from "react";
 import ProfileModel from "./ProfileModel";
 import { AuthContext } from "../context/AuthContext";
 const Header = () => {
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, logout } = useContext(AuthContext);
+  const handleLogout = () => {
+    logout();
+  };
   return (
     <Flex
       justifyContent="space-between"
@@ -44,7 +47,7 @@ const Header = () => {
           <ProfileModel currentUser={currentUser}>
             <MenuItem>My Profile</MenuItem>
           </ProfileModel>
-          <MenuItem>Logout</MenuItem>
+          <MenuItem onClick={handleLogout}>Logout</MenuItem>
         </MenuList>
       </Menu>
     </Flex>

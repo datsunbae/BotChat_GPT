@@ -1,22 +1,16 @@
-import React, { useContext } from "react";
+import React from "react";
 import { ViewIcon } from "@chakra-ui/icons";
 import {
   Modal,
   ModalOverlay,
   ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
   ModalCloseButton,
-  Button,
   useDisclosure,
   IconButton,
   Text,
   Image,
   Flex,
 } from "@chakra-ui/react";
-
-import { AuthContext } from "../context/AuthContext";
 
 const ProfileModel = ({ currentUser, children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
