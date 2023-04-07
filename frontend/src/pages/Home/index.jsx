@@ -37,7 +37,7 @@ const HomePage = () => {
       >
         <Text fontSize="4xl">BotChat GPT</Text>
       </Box>
-{/* TRANCAODAI COMMIT LAN 2*/}
+{/* TRANCAODAI COMMIT LAN 3*/}
       <Box bg="white" w="100%" p={4} borderRadius="lg" borderWidth="1px">
         <Tabs variant="soft-rounded">
           <TabList>
