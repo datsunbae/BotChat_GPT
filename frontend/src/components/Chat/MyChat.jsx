@@ -3,8 +3,7 @@ import React, { useContext, useEffect } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import axiosJWT from "../../contants/axiosJWT";
 import { AddIcon } from "@chakra-ui/icons";
-import NewChatModel from "./NewChatModel";
-import { getSender } from "../../helper/helpers";
+import Model from "./Model";
 import ChatLoading from "./ChatLoading";
 
 const MyChat = () => {
@@ -15,6 +14,8 @@ const MyChat = () => {
     setChats,
     selectedChat,
     setSelectedChat,
+    isLoadMyChat,
+    setIsLoadMyChatW,
   } = useContext(AuthContext);
   const newAxiosJWT = axiosJWT(currentUser, refreshAccessToken);
   const toast = useToast();
@@ -43,11 +44,11 @@ const MyChat = () => {
 
   useEffect(() => {
     fetchChats();
-  }, []);
+  }, [isLoadMyChat]);
 
   return (
     <Box
-      display={{ display: selectedChat ? "none" : "flex", md: "flex" }}
+      display="flex"
       flex="1"
       bg="white"
       flexDir="column"
@@ -66,7 +67,7 @@ const MyChat = () => {
         alignItems="center"
       >
         My Chats
-        <NewChatModel>
+        <Model type="create" title="Create Chat">
           <Button
             style={{ display: "flex" }}
             fontSize={{ base: "17px", md: "10px", lg: "17px" }}
@@ -74,7 +75,7 @@ const MyChat = () => {
           >
             New Group Chat
           </Button>
-        </NewChatModel>
+        </Model>
       </Flex>
       <Flex
         flexDir="column"
@@ -93,16 +94,11 @@ const MyChat = () => {
                 bg={selectedChat === chat ? "#38B2AC" : "#E8E8E8"}
                 color={selectedChat === chat ? "white" : "black"}
                 px={3}
-                py={2}
+                py={4}
                 borderRadius="lg"
                 key={chat._id}
               >
                 <Text>{chat.chatName}</Text>
-                <Text>
-                  {!chat.isGroupChat
-                    ? getSender(currentUser, chat.user)
-                    : chat.chatName}
-                </Text>
                 {chat.latestMessage && (
                   <Text fontSize="xs">
                     <b>{chat.latestMessage.sender.name} : </b>

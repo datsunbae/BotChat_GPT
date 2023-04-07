@@ -125,7 +125,7 @@ const authController = {
       },
       process.env.JWT_ACCESS_TOKEN,
       {
-        expiresIn: "10s",
+        expiresIn: "5m",
       }
     );
   },

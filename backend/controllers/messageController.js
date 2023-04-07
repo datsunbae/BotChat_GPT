@@ -30,6 +30,8 @@ const messageController = {
 
       const { chatID, newMessage } = req.body;
 
+      console.log("New message: " + chatID);
+
       if (!chatID) {
         return res.status(400).json("Chat ID is not null");
       }
@@ -77,16 +79,15 @@ const messageController = {
         messages,
       });
 
-      const responseMessage =
-        completion.data.choices[0].message.content;
+      const responseMessage = completion.data.choices[0].message.content;
 
-      await Message.create({
+      const newMess = await Message.create({
         sender: req.user.id,
         userMessage: newMessage,
         botMessage: responseMessage,
         chat: chatID,
       });
-      return res.status(200).json(responseMessage);
+      return res.status(200).json(newMess);
     } catch (err) {
       return res.status(500).json(err);
     }

@@ -9,6 +9,9 @@ export const AuthContextPovider = ({ children }) => {
   );
   const [chats, setChats] = useState([]);
   const [selectedChat, setSelectedChat] = useState([]);
+
+  const [isLoadMyChat, setIsLoadMyChat] = useState(false);
+
   const login = async (inputs) => {
     const res = await axios.post("/api/auth/login", inputs);
     setCurrentUser(res.data);
@@ -17,6 +20,8 @@ export const AuthContextPovider = ({ children }) => {
   const logout = async () => {
     await axios.post("/api/auth/logout");
     setCurrentUser(null);
+    setChats([]);
+    setSelectedChat(null);
   };
 
   const refreshAccessToken = (accessToken) => {
@@ -39,6 +44,8 @@ export const AuthContextPovider = ({ children }) => {
         setChats,
         selectedChat,
         setSelectedChat,
+        isLoadMyChat,
+        setIsLoadMyChat,
       }}
     >
       {children}

@@ -14,8 +14,8 @@ const chatController = {
   },
   createChat: async (req, res) => {
     try {
-      const { chatName, userID } = req.body;
-      const newChat = await Chat.create({ chatName, user: userID });
+      const { chatName } = req.body;
+      const newChat = await Chat.create({ chatName, user: req.user.id });
       return res.status(200).json(newChat);
     } catch (err) {
       return res.status(500).json(err);
@@ -23,14 +23,14 @@ const chatController = {
   },
   renameChat: async (req, res) => {
     try {
-      const chatID = req.params.id;
-      console.log(chatID);
+      const { chatID, chatName } = req.body;
+
+      console.log(chatID, chatName);
 
       if (!chatID) {
         return res.status(400).json("Chat not found");
       }
 
-      const { chatName } = req.body;
       const updateChat = await Chat.findByIdAndUpdate(
         chatID,
         { chatName },
@@ -50,18 +50,17 @@ const chatController = {
     try {
       const idChat = req.params.id;
 
-      if(!idChat){
+      if (!idChat) {
         return res.status(400).json("ChatID is not null");
       }
 
       const deleteChat = await Chat.findByIdAndDelete(idChat);
 
-      if(!deleteChat){
+      if (!deleteChat) {
         return res.status(404).json("ChatID is not found");
       }
 
       return res.status(200).json("Chat has been deleted");
-
     } catch (err) {
       return res.status(500).json(err);
     }
