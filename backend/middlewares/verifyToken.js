@@ -1,8 +1,8 @@
 const jwt = require("jsonwebtoken");
 
 const verifyToken = async (req, res, next) => {
-  const token = req.headers.authorization;
   console.log("Middleware");
+  const token = req.headers.authorization;
   if (!token) {
     return res.status(401).json("You're not authenticated");
   }

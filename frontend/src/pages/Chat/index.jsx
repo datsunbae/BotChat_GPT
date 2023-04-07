@@ -1,18 +1,25 @@
-import React from 'react'
-import axios from 'axios'
+import React, { useContext } from "react";
+import { Flex } from "@chakra-ui/react";
+import BoxChat from "../../components/Chat/BoxChat";
+import MyChat from "../../components/Chat/MyChat";
+import { AuthContext } from "../../context/AuthContext";
+import Header from "../../components/Header";
 
-const handleClick = async () => {
-  try{
-    axios.defaults.headers.common['Cookie'] = document.cookie;
-    await axios.post("http://localhost:5000/api/auth/refreshtoken");
-  }catch(err){
-  }
-}
+const handleClick = (logout) => {
+  logout();
+};
 
 const ChatPage = () => {
+  const { logout } = useContext(AuthContext);
   return (
-    <button onClick={handleClick}>ChatPage</button>
-  )
-}
+    <>
+      <Header/>
+      <Flex  justifyContent="space-evenly" gap="20px" w="100%" h="90vh"  p="10px 0" >
+        <MyChat />
+        <BoxChat />
+      </Flex> 
+    </>
+  );
+};
 
-export default ChatPage
+export default ChatPage;

@@ -1,43 +1,36 @@
-import axios from "axios";
 import jwt_decode from "jwt-decode";
-import { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
+import axios from "axios";
 
-export default function axiosJWT() {
+export default function axiosJWT(currentUser, refreshAccessToken) {
   const refreshToken = async () => {
     try {
-      const res = await axios.post("/api/auth/refreshtoken");
+      const res = await axios.post("api/auth/refreshtoken");
       return res.data;
     } catch (err) {
       console.log(err);
     }
   };
 
-  const createAxiosJWT = () => {
-    const axiosJWT = axios.create();
-    axiosJWT.interceptors.request.use(
-      async (config) => {
-        const { currentUser, refreshAccessToken } = useContext(AuthContext);
-        let currentDate = new Date();
-        console.log(currentUser);
+  const axiosJWT = axios.create();
+  axiosJWT.interceptors.request.use(
+    async (config) => {
+      let currentDate = new Date();
+      console.log(currentUser);
 
-        const decodedToken = jwt_decode(currentUser.accessToken);
-        if (decodedToken.exp * 1000 < currentDate.getTime()) {
-          const newAccessToken = await refreshToken();
-          refreshAccessToken(newAccessToken.toString());
+      const decodedToken = jwt_decode(currentUser.accessToken);
+      if (decodedToken.exp * 1000 < currentDate.getTime()) {
+        console.log("Het han")
+        const newAccessToken = await refreshToken();
+        refreshAccessToken(newAccessToken.toString());
 
-          config.headers["authorization"] =
-            "Bearer " + newAccessToken.toString();
-        }
-        return config;
-      },
-      (error) => {
-        return Promise.reject(error);
+        config.headers["authorization"] = "Bearer " + newAccessToken.toString();
       }
-    );
+      return config;
+    },
+    (error) => {
+      return Promise.reject(error);
+    }
+  );
 
-    return axiosJWT;
-  };
-
-  return { createAxiosJWT};
+  return axiosJWT;
 }

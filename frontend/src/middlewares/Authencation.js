@@ -3,8 +3,8 @@ import { Navigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 
 const Authencation = ({children, redirectTo}) => {
-    const {isLogin} = useContext(AuthContext);
-    return isLogin ? children : <Navigate to={redirectTo} />;
+    const {currentUser} = useContext(AuthContext);
+    return currentUser ? children : <Navigate to={redirectTo} />;
 }
 
 export default Authencation;

@@ -112,9 +112,9 @@ const authController = {
           return res.status(403).json("Token is not valid");
         }
 
-        const accessToken = AuthenController.generateAccessToken(user);
+        const accessToken = authController.generateAccessToken(user);
 
-        res.status(200).json({ accessToken });
+        res.status(200).json(accessToken);
       }
     );
   },
@@ -125,7 +125,7 @@ const authController = {
       },
       process.env.JWT_ACCESS_TOKEN,
       {
-        expiresIn: "5m",
+        expiresIn: "10s",
       }
     );
   },
