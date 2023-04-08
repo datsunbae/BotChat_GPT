@@ -49,8 +49,6 @@ const authController = {
         return res.status(404).json("Wrong username");
       }
 
-      console.log("Password >>>> " + user.password + ">>>>> " + password);
-
       const validPassword = await bcrypt.compare(password, user.password);
       if (!validPassword) {
         return res.status(404).json("Wrong password");
@@ -116,7 +114,7 @@ const authController = {
       await sendMail(
         email,
         "Reset password",
-        `<a href="${process.env.APP_URL}/password/reset/${email}?token=${hashedEmail}"> Reset Password </a>`
+        `<a href="${process.env.APP_URL}/password/reset/?email=${email}&token=${hashedEmail}"> Reset Password </a>`
       );
 
       return res.status(200).json("Send link reset password success");
@@ -124,7 +122,47 @@ const authController = {
       return res.status(500).json(err);
     }
   },
-  forgotPassword: async (req, res) => {},
+  resetPassword: async (req, res) => {
+    const { newPassword, token, email } = req.body;
+
+    try {
+      if (!email && !token) {
+        return res.status(400).json("Token or email must not be null");
+      }
+
+      if (!newPassword) {
+        return res.status(400).json("Password must not be null");
+      }
+
+      const validToken = await bcrypt.compare(email, token);
+      if (!validToken) {
+        return res.status(400).json("URL is not valid");
+      }
+
+      const user = await User.findOne({ email });
+
+      if (!user) {
+        return res.status(400).json("Email not found");
+      }
+
+      //Hash password
+      const salt = await bcrypt.genSalt(
+        parseInt(process.env.BCRYPT_SALT_ROUNDS)
+      );
+      const hash = await bcrypt.hash(newPassword, salt);
+
+      const updateUser = await User.findByIdAndUpdate(user._id, {
+        password: hash,
+      });
+
+      const { password, refreshToken, ...other } = updateUser._doc;
+
+      return res.status(200).json(other);
+    } catch (err) {
+      console.log(err);
+      return res.status(500).json(err);
+    }
+  },
   refreshToken: async (req, res) => {
     console.log({ ...req.cookies });
     const refreshToken = req.cookies.refreshToken;
