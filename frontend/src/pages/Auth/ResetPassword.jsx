@@ -52,8 +52,6 @@ const ResetPassword = () => {
       return;
     }
 
-    console.log(password);
-
     try {
       await axios.put("/api/auth/resetpassword", {
         email: email,
@@ -84,7 +82,7 @@ const ResetPassword = () => {
         borderRadius="lg"
         borderWidth="1px"
       >
-        <Text fontSize="4xl">Forgot Password</Text>
+        <Text fontSize="4xl">New Password</Text>
       </Box>
       <Box bg="white" w="100%" p={4} borderRadius="lg" borderWidth="1px">
         <VStack spacing="10px">

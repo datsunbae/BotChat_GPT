@@ -9,13 +9,18 @@ const verifyToken = async (req, res, next) => {
 
   const accessToken = token?.split(" ")[1];
 
-  await jwt.verify(accessToken, process.env.JWT_ACCESS_TOKEN, (err, userInfo) => {
-    if (err) {
-      return res.status(403).json("Token is not valid!");
+  await jwt.verify(
+    accessToken,
+    process.env.JWT_ACCESS_TOKEN,
+    (err, userInfo) => {
+      if (err) {
+        return res.status(403).json("Token is not valid!");
+      }
+      req.user = userInfo;
+      next();
     }
-    req.user = userInfo;
-    next();
-  });
+  );
 };
 
-module.exports = {verifyToken};
+
+module.exports = { verifyToken };

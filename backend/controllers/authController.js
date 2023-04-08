@@ -105,16 +105,12 @@ const authController = {
         return res.status(404).json("Email is not found");
       }
 
-      //Hash email
-      const salt = await bcrypt.genSalt(
-        parseInt(process.env.BCRYPT_SALT_ROUNDS)
-      );
-      const hashedEmail = await bcrypt.hash(email, salt);
+      const token = authController.generateTokenForgotPassword(checkEmail);
 
       await sendMail(
         email,
         "Reset password",
-        `<a href="${process.env.APP_URL}/resetpassword?email=${email}&token=${hashedEmail}"> Reset Password </a>`
+        `<a href="${process.env.APP_URL}/resetpassword?email=${email}&token=${token}"> Reset Password </a>`
       );
 
       return res.status(200).json("Send link reset password success");
@@ -134,30 +130,35 @@ const authController = {
         return res.status(400).json("Password must not be null");
       }
 
-      const validToken = await bcrypt.compare(email, token);
-      if (!validToken) {
-        return res.status(400).json("URL is not valid");
-      }
-
       const user = await User.findOne({ email });
 
       if (!user) {
         return res.status(400).json("Email not found");
       }
 
-      //Hash password
-      const salt = await bcrypt.genSalt(
-        parseInt(process.env.BCRYPT_SALT_ROUNDS)
+      await jwt.verify(
+        token,
+        process.env.JWT_FORGOT_PASSWORD,
+        async (err, userInfo) => {
+          if (err) {
+            return res.status(403).json("URL is not valid!");
+          }
+
+          //Hash password
+          const salt = await bcrypt.genSalt(
+            parseInt(process.env.BCRYPT_SALT_ROUNDS)
+          );
+          const hash = await bcrypt.hash(newPassword, salt);
+
+          const updateUser = await User.findByIdAndUpdate(user._id, {
+            password: hash,
+          });
+
+          const { password, refreshToken, ...other } = updateUser._doc;
+
+          return res.status(200).json(other);
+        }
       );
-      const hash = await bcrypt.hash(newPassword, salt);
-
-      const updateUser = await User.findByIdAndUpdate(user._id, {
-        password: hash,
-      });
-
-      const { password, refreshToken, ...other } = updateUser._doc;
-
-      return res.status(200).json(other);
     } catch (err) {
       console.log(err);
       return res.status(500).json(err);
@@ -186,6 +187,17 @@ const authController = {
 
       res.status(200).json(accessToken);
     });
+  },
+  generateTokenForgotPassword: (user) => {
+    return jwt.sign(
+      {
+        email: user.email,
+      },
+      process.env.JWT_FORGOT_PASSWORD,
+      {
+        expiresIn: "2m",
+      }
+    );
   },
   generateAccessToken: (user) => {
     return jwt.sign(
