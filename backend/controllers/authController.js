@@ -1,11 +1,12 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
+const sendMail = require("../utils/mailer");
 
 const authController = {
   register: async (req, res) => {
     try {
-      console.log(req.body)
+      console.log(req.body);
       const { name, email, password, avatar } = req.body;
       console.log(">>>>>>" + name);
 
@@ -48,7 +49,7 @@ const authController = {
         return res.status(404).json("Wrong username");
       }
 
-      console.log("Password >>>> " + user.password  + ">>>>> " + password) ;
+      console.log("Password >>>> " + user.password + ">>>>> " + password);
 
       const validPassword = await bcrypt.compare(password, user.password);
       if (!validPassword) {
@@ -66,12 +67,14 @@ const authController = {
 
         const { password, refreshToken, ...rest } = user._doc;
 
-        return res.cookie("refreshToken", newRefreshToken, {
-          httpOnly: true,
-          sameSite: "strict",
-          scure: false,
-        }).status(200).json({ ...rest, accessToken: newAccessToken });
-
+        return res
+          .cookie("refreshToken", newRefreshToken, {
+            httpOnly: true,
+            sameSite: "strict",
+            scure: false,
+          })
+          .status(200)
+          .json({ ...rest, accessToken: newAccessToken });
       }
     } catch (err) {
       res.status(500).json(err);
@@ -90,6 +93,38 @@ const authController = {
       return res.status(500).json(err);
     }
   },
+  sendRestPasswordLink: async (req, res) => {
+    const { email } = req.body;
+    console.log(email);
+    try {
+      if (!email) {
+        return res.status(400).json("Email is not null");
+      }
+
+      const checkEmail = await User.findOne({ email });
+
+      if (!checkEmail) {
+        return res.status(404).json("Email is not found");
+      }
+
+      //Hash email
+      const salt = await bcrypt.genSalt(
+        parseInt(process.env.BCRYPT_SALT_ROUNDS)
+      );
+      const hashedEmail = await bcrypt.hash(email, salt);
+
+      await sendMail(
+        email,
+        "Reset password",
+        `<a href="${process.env.APP_URL}/password/reset/${email}?token=${hashedEmail}"> Reset Password </a>`
+      );
+
+      return res.status(200).json("Send link reset password success");
+    } catch (err) {
+      return res.status(500).json(err);
+    }
+  },
+  forgotPassword: async (req, res) => {},
   refreshToken: async (req, res) => {
     console.log({ ...req.cookies });
     const refreshToken = req.cookies.refreshToken;
@@ -104,19 +139,15 @@ const authController = {
       return res.status(403).json("Token is not valid");
     }
 
-    jwt.verify(
-      refreshToken,
-      process.env.JWT_REFRESH_TOKEN,
-      (err, user) => {
-        if (err) {
-          return res.status(403).json("Token is not valid");
-        }
-
-        const accessToken = authController.generateAccessToken(user);
-
-        res.status(200).json(accessToken);
+    jwt.verify(refreshToken, process.env.JWT_REFRESH_TOKEN, (err, user) => {
+      if (err) {
+        return res.status(403).json("Token is not valid");
       }
-    );
+
+      const accessToken = authController.generateAccessToken(user);
+
+      res.status(200).json(accessToken);
+    });
   },
   generateAccessToken: (user) => {
     return jwt.sign(
