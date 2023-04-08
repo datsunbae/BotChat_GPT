@@ -51,8 +51,6 @@ const messageController = {
         },
       ];
 
-      console.log(">>>>>Messages: " + messages);
-
       for (let message of getOldMessages) {
         messages.push({
           role: "user",

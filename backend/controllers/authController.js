@@ -114,7 +114,7 @@ const authController = {
       await sendMail(
         email,
         "Reset password",
-        `<a href="${process.env.APP_URL}/password/reset/?email=${email}&token=${hashedEmail}"> Reset Password </a>`
+        `<a href="${process.env.APP_URL}/resetpassword?email=${email}&token=${hashedEmail}"> Reset Password </a>`
       );
 
       return res.status(200).json("Send link reset password success");
