@@ -106,6 +106,7 @@ const MyChat = () => {
                       ? chat.latestMessage.content.substring(0, 51) + "..."
                       : chat.latestMessage.content}
                   </Text>
+                  
                 )}
               </Box>
             ))}
@@ -115,7 +116,8 @@ const MyChat = () => {
         )}
       </Flex>
     </Box>
+    
   );
 };
-
+// cồm mít thdat
 export default MyChat;
