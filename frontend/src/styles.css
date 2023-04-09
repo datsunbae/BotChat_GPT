@@ -4,3 +4,9 @@
     overflow-y: scroll;
     scrollbar-width: none;
   }
+.history{
+  display: flex;
+  flex-direction: column;
+  margin-left: 25px;
+  scrollbar-width: auto;
+}
