@@ -1,5 +1,5 @@
-import React from "react";
-import { ViewIcon } from "@chakra-ui/icons";
+import React, { useState } from "react";
+import { EditIcon, ViewIcon } from "@chakra-ui/icons";
 import {
   Modal,
   ModalOverlay,
@@ -14,6 +14,8 @@ import {
 
 const ProfileModel = ({ currentUser, children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const handleChangeName = () => {};
   return (
     <>
       {children ? (
@@ -38,8 +40,9 @@ const ProfileModel = ({ currentUser, children }) => {
               alt={currentUser.name}
               mb="10px"
             />
-            <Text fontSize="20px" display="flex" gap="5px">
+            <Text fontSize="20px" display="flex" gap="5px" alignItems="center">
               <Text fontWeight="bold">Name:</Text> {currentUser.name}
+              <EditIcon cursor="pointer" onClick={handleChangeName} />
             </Text>
             <Text display="flex" gap="5px" fontSize="20px">
               <Text fontWeight="bold">Email:</Text> {currentUser.email}

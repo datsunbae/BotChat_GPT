@@ -125,5 +125,4 @@ const NewChatModel = ({ children, type, title }) => {
     </>
   );
 };
-
 export default NewChatModel;
