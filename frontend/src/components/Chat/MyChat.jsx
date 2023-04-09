@@ -119,5 +119,4 @@ const MyChat = () => {
     
   );
 };
-// cồm mít thdat
 export default MyChat;

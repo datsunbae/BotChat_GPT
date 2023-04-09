@@ -11,4 +11,3 @@ root.render(
     </AuthContextPovider>
   </React.StrictMode>
 );
-//Tran Cao Dai commit lan 7

@@ -125,5 +125,4 @@ const NewChatModel = ({ children, type, title }) => {
     </>
   );
 };
-//create new chat with thdat ;)))
 export default NewChatModel;
