@@ -37,8 +37,7 @@ const SingleChat = () => {
   const newAxiosJWT = axiosJWT(currentUser, refreshAccessToken);
 
   const fetchMessages = async () => {
-    console.log("My Checkkkkk >>>", selectedChat._id);
-    if (!selectedChat._id) {
+    if (!selectedChat?._id) {
       setSelectedChat(null);
       return;
     }
@@ -138,6 +137,7 @@ const SingleChat = () => {
         isClosable: true,
         position: "bottom",
       });
+      setSelectedChat(null);
     } catch (err) {
       toast({
         title: "Error Occured!",

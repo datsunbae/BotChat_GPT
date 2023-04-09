@@ -15,14 +15,13 @@ const MyChat = () => {
     selectedChat,
     setSelectedChat,
     isLoadMyChat,
-    setIsLoadMyChatW,
   } = useContext(AuthContext);
   const newAxiosJWT = axiosJWT(currentUser, refreshAccessToken);
   const toast = useToast();
 
   const fetchChats = async () => {
+    console.log(currentUser);
     try {
-      console.log("Test: " + JSON.stringify(currentUser));
       const response = await newAxiosJWT.get("/api/chat", {
         headers: {
           authorization: `Bearer ${currentUser.accessToken}`,
@@ -106,7 +105,6 @@ const MyChat = () => {
                       ? chat.latestMessage.content.substring(0, 51) + "..."
                       : chat.latestMessage.content}
                   </Text>
-                  
                 )}
               </Box>
             ))}
@@ -116,7 +114,6 @@ const MyChat = () => {
         )}
       </Flex>
     </Box>
-    
   );
 };
 export default MyChat;

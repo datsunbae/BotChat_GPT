@@ -37,6 +37,7 @@ export const AuthContextPovider = ({ children }) => {
     <AuthContext.Provider
       value={{
         currentUser,
+        setCurrentUser,
         login,
         logout,
         refreshAccessToken,

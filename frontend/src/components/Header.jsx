@@ -10,7 +10,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import ProfileModel from "./ProfileModel";
 import { AuthContext } from "../context/AuthContext";
 const Header = () => {
@@ -18,6 +18,8 @@ const Header = () => {
   const handleLogout = () => {
     logout();
   };
+
+  useEffect(() => {}, [currentUser]);
   return (
     <Flex
       justifyContent="space-between"

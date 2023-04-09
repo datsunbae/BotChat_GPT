@@ -15,7 +15,6 @@ export default function axiosJWT(currentUser, refreshAccessToken) {
   axiosJWT.interceptors.request.use(
     async (config) => {
       let currentDate = new Date();
-      console.log(currentUser);
 
       const decodedToken = jwt_decode(currentUser.accessToken);
       if (decodedToken.exp * 1000 < currentDate.getTime()) {

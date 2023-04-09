@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { EditIcon, ViewIcon } from "@chakra-ui/icons";
+import ChangeName from "./User/ChangeName";
 import {
   Modal,
   ModalOverlay,
@@ -14,6 +15,8 @@ import {
 
 const ProfileModel = ({ currentUser, children }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  useEffect(() => {}, [currentUser])
 
   const handleChangeName = () => {};
   return (
@@ -42,7 +45,9 @@ const ProfileModel = ({ currentUser, children }) => {
             />
             <Text fontSize="20px" display="flex" gap="5px" alignItems="center">
               <Text fontWeight="bold">Name:</Text> {currentUser.name}
-              <EditIcon cursor="pointer" onClick={handleChangeName} />
+              <ChangeName>
+                <EditIcon cursor="pointer" onClick={handleChangeName} />
+              </ChangeName>
             </Text>
             <Text display="flex" gap="5px" fontSize="20px">
               <Text fontWeight="bold">Email:</Text> {currentUser.email}
