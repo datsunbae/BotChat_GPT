@@ -6,20 +6,19 @@ const sendMail = require("../utils/mailer");
 const authController = {
   register: async (req, res) => {
     try {
-      console.log(req.body);
       const { name, email, password, avatar } = req.body;
-      console.log(">>>>>>" + name);
 
       if (!name || !email || !password) {
         res.status(400).json("Please enter all the required fields");
         return;
       }
 
+      console.log(email);
+
       const checkExists = await User.findOne({ email });
 
       if (checkExists) {
-        res.status(400).json("User already exists");
-        return;
+        return res.status(400).json("User already exists");
       }
 
       //Hash password
@@ -44,6 +43,11 @@ const authController = {
   login: async (req, res) => {
     try {
       const { email, password } = req.body;
+
+      if (!email || !password) {
+        return res.status(404).json("Email or passs not null");
+      }
+
       const user = await User.findOne({ email });
       if (!user) {
         return res.status(404).json("Wrong username");
