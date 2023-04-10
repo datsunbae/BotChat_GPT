@@ -4,7 +4,6 @@ const chatController = {
   getAllChats: async (req, res) => {
     try {
       const allChats = await Chat.find({ user: { $eq: req.user.id } })
-        .populate("lastedMessage")
         .populate("user", "-password -refreshToken")
         .sort({ updateAt: -1 });
       return res.status(200).json(allChats);
