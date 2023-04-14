@@ -1,2 +1,0 @@
-Bìa + User Stories + Activity: https://drive.google.com/drive/folders/14KP7XZc_YGUEDh12RiLOMCDXJ6J3Z8vx?usp=share_link
-Unit test: https://github.com/datsunbae/BotChat_GPT/tree/master/backend/Test
